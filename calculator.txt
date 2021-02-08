@@ -1,0 +1,121 @@
+<template>
+  <div>
+    <div class="calculator">
+      <div class="display">{{ current | 0 }}</div>
+      <div @click="clear">C</div>
+      <div @click="sign">+/-</div>
+      <div @click="percent">%</div>
+      <div @click="divide" class="operator">/</div>
+      <div @click="append('7')">7</div>
+      <div @click="append('8')">8</div>
+      <div @click="append('9')">9</div>
+      <div @click="multi" class="operator">X</div>
+      <div @click="append('4')">4</div>
+      <div @click="append('5')">5</div>
+      <div @click="append('6')">6</div>
+      <div @click="minus" class="operator">-</div>
+      <div @click="append('1')">1</div>
+      <div @click="append('2')">2</div>
+      <div @click="append('3')">3</div>
+      <div @click="add" class="operator">+</div>
+      <div @click="append('0')" class="zero">0</div>
+      <div @click="dot">.</div>
+      <div @click="equal" class="operator">=</div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      previous: null,
+      current: "",
+      operator: null,
+      operatorClicked: false
+    };
+  },
+  methods: {
+    clear() {
+      this.current = "";
+    },
+    sign() {
+      this.current =
+        this.current.charAt(0) === "-"
+          ? this.current.slice(1)
+          : `-${this.current}`;
+    },
+    percent() {
+      this.current = `${parseFloat(this.current) / 100}`;
+    },
+    append(number) {
+      if (this.operatorClicked === true) {
+        this.current = "";
+        this.operatorClicked = false;
+      }
+
+      this.current = `${this.current}${number}`;
+    },
+    dot() {
+      if (this.current.indexOf(".") === -1) {
+        this.append(".");
+      }
+    },
+    setPervious() {
+      this.previous = this.current;
+      this.operatorClicked = true;
+    },
+    add() {
+      this.operator = (a, b) => a + b;
+      this.setPervious();
+    },
+    minus() {
+      this.operator = (a, b) => a + b;
+      this.setPervious();
+    },
+    multi() {
+      this.operator = (a, b) => a * b;
+      this.setPervious();
+    },
+    divide() {
+      this.operator = (a, b) => a / b;
+      this.setPervious();
+    },
+    equal() {
+      this.current = this.operator(
+        parseFloat(this.previous),
+        parseFloat(this.current)
+      );
+    }
+  }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.calculator {
+  width: 350px;
+  margin: 0 auto;
+  font-size: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  background: lightgrey;
+}
+div {
+  border: 1px solid rgb(180, 178, 178);
+  cursor: default;
+}
+.display {
+  grid-column: 1 / 5;
+  background: #333;
+  color: white;
+}
+.zero {
+  grid-column: 1 / 3;
+}
+.operator {
+  background: orange;
+  color: white;
+}
+</style>
